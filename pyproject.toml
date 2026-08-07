@@ -1,0 +1,26 @@
+[project]
+name = "py-importlib-learning"
+version = "0.1.0"
+description = "just learning"
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+]
+
+# ----------------------------------------------------
+# Configurações das ferramentas (Opcional)
+# ----------------------------------------------------
+
+[tool.ruff]
+line-length = 150 
+
+[tool.ruff.lint]
+
+select = ["E", "F", "I"] 
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+mypy_path = "."
+explicit_package_bases = true
