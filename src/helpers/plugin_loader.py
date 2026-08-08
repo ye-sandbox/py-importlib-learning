@@ -52,18 +52,22 @@ class PluginLoader:
             logger.error(f"A pasta {plugins_dir} não foi encontrada.")
             return self.plugins_loaded
         
-        for file in plugins_dir.glob("*.py"):
+        for file in plugins_dir.rglob("*.py"):
             if file.name == "__init__.py":
                 continue
 
-            plugin_name = file.stem
-            loaded_module = self.load_plugin(plugin_name)
-            logger.info(f"Carregando: {plugin_name}")
+            # Encontra o caminho do arquivo relativo à pasta plugins
+            relative_path = file.relative_to(plugins_dir)
+            plugin_name = relative_path.with_suffix('').as_posix().replace('/', '.')
 
-            # Mostar desc e obter atribruto dos plugins
-            logger.info(getattr(loaded_module, "PLUGIN_DESC"))
-            
+            loaded_module = self.load_plugin(plugin_name)
             if loaded_module is not None:
+                logger.info(f"Carregado com sucesso: {plugin_name}")
+
+                # Mostrar desc e obter atributo dos plugins
+                plugin_desc = getattr(loaded_module, "PLUGIN_DESC", "Sem descrição")
+                logger.info(f"Info do {plugin_name}: {plugin_desc}")
+                
                 self.plugins_loaded[plugin_name] = loaded_module
 
         return self.plugins_loaded
