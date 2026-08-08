@@ -11,13 +11,6 @@ class PluginLoader:
         self.plugins_loaded: dict[str, types.ModuleType] = {}
         self.base_dir = base_dir
 
-    def _check_plugin_existence(self, plugin_dir: str) -> bool:
-        """
-        Verifica se o plugin existe baseado no caminho fornecido
-        """
-        plugin = importlib.util.find_spec(plugin_dir)
-        return plugin is not None
-
     def load_plugin(self, plugin_name: str) -> types.ModuleType | None:
         """
         Carrega o plugin, baseado no nome declarado na função e o caminho em 'base_dir'
@@ -29,7 +22,7 @@ class PluginLoader:
 
         full_plugin_dir = f"{self.base_dir}.{plugin_name}"
         try:
-            if not self._check_plugin_existence(full_plugin_dir):
+            if not importlib.util.find_spec(full_plugin_dir):
                 logger.error(f"Plugin {full_plugin_dir} não encontrado")
                 return None
             logger.info(f"Importando: .{plugin_name} from {self.base_dir}")
