@@ -40,7 +40,7 @@ class PluginLoader:
             logger.error(f"Erro ao carregar plugin: {e}")
             return None
 
-    def load_all_plugins(self):
+    def load_all_plugins(self) -> dict[str, types.ModuleType]:
         """
         Lê a pasta de plugins e importa todos os arquivos .py encontrados
         Retorna um dicionário com o nome do plugin e o módulo carregado
@@ -57,8 +57,14 @@ class PluginLoader:
                 continue
 
             plugin_name = file.stem
+            loaded_module = self.load_plugin(plugin_name)
             logger.info(f"Carregando: {plugin_name}")
 
-            self.plugins_loaded[plugin_name] = self.load_plugin(plugin_name)
+            # Mostar desc e obter atribruto dos plugins
+            logger.info(getattr(loaded_module, "PLUGIN_DESC"))
+            
+            if loaded_module is not None:
+                self.plugins_loaded[plugin_name] = loaded_module
 
         return self.plugins_loaded
+
